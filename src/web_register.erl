@@ -7,16 +7,16 @@ main() ->
                                  body=["Register:",
                                        #br{},
                                        "Username: ",
-                                       #textbox { id=username, postback=register },
+                                       #textbox { id=username },
                                        #br{},
                                        "Email Address: ",
-                                       #textbox { id=email_address, postback=register },
+                                       #textbox { id=email_address },
                                        #br{},
                                        "Password: ",
-                                       #password { id=pass, postback=register },
+                                       #password { id=pass },
                                        #br{},       
                                        "Retype Password: ",
-                                       #password { id=pass2, postback=register },
+                                       #password { id=pass2 },
                                        #br{},              
                                        #button { id=submit, text="Register", postback=register },
                                        #br{},
@@ -28,9 +28,13 @@ main() ->
                                       ]}},
 
     wf:wire(submit, username, #validate { attach_to=username, validators=[#is_required { text="Required." }] }),
+    wf:wire(submit, username, #validate { attach_to=username, validators=[#custom { text="Username already registered.", function=(fun (X, Y) -> is_username_used (X, Y) end) }] }),
+    wf:wire(submit, username, #validate { attach_to=username, validators=[#custom { text="Error: No spaces allowed in username.", function=(fun (X, Y) -> check_username (X, Y) end) }] }),
+    wf:wire(submit, username, #validate { attach_to=username, validators=[#min_length { text="Error: Username must be at least 3 characters.", length=3 }] }),
     wf:wire(submit, email_address, #validate { attach_to=email_address, validators=[#is_required { text="Required." }] }),
-    wf:wire(submit, email_address, #validate { attach_to=email_address, validators=[#is_email { text="Required: proper email address." }] }),
+    wf:wire(submit, email_address, #validate { attach_to=email_address, validators=[#is_email { text="Required: Proper email address." }] }),
     wf:wire(submit, pass, #validate { attach_to=pass2, validators=[#confirm_password { text="Error: Passwords do not match", password=pass2 }] }),
+    wf:wire(submit, pass, #validate { attach_to=pass, validators=[#min_length { text="Error: Passwords must be at least 8 characters.", length=8 }] }),
     
     wf:render(Body).
 
@@ -44,3 +48,14 @@ event (register) ->
 
 event (_) -> 
     ok.
+
+is_username_used (_, _) ->
+    db_backend:is_username_used (hd(wf:q(username))).
+
+check_username (_, _) ->
+    case string:chr (hd(wf:q(username)), $ ) of
+        0 ->
+            true;
+        _ ->
+            false
+    end.

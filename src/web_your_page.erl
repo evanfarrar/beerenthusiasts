@@ -3,6 +3,14 @@
 -export ([main/0, event/1]).
 
 main () ->    
+    case wf:user() of
+        undefined ->
+            wf:redirect("register"),
+            Header = "";
+        _ ->
+            Header = "user_header"
+    end,
+    
     {ok, Results, _} = rfc4627:decode(couchdb_util:doc_get_all (wf:user())),
     %io:format ("~w~n", [Results]),
     case Results of
@@ -17,20 +25,24 @@ main () ->
             Links = create_links (Recipes)
     end,
     io:format ("~w~n", [Links]),
-    Body = #body { body=#panel { style="margin: 50px;", 
-                                 body=["Your Recipes:",
+    Template = #template {file="main_template", title="Your Page",
+                          section1 = #panel { style="margin: 50px;", 
+                                 body=[
+                                       #file { file=Header },
+                                       #link {text="Create Recipe", url="edit_recipe"},
                                        #br{},
-                                       %Links,
+                                       "Your Recipes:",
+                                       #br{},
                                        #flash { id=flash },
                                        #panel { id=test }
                                       ]}},
-    wf:render(Body).
+    wf:render(Template).
 
 event (_) ->
     ok.
  
 create_links (Recipes) ->
-    [wf:update(test, #link { text=ID, url="view_doc?user="++ wf:user() ++"&doc_id="++ID}) 
+    [wf:insert_bottom(test, [ID, " ", #link { text="[view]", url="view_doc?user="++ wf:user() ++"&doc_id="++ID}, #link { text="[edit]", url="edit_recipe?name="++ID}, #br{}]) 
      || {obj, [{"id", ID},
                {"key", Key},
                {"value", {obj,[{"rev", Rev}]}}]} <- Recipes].                         
