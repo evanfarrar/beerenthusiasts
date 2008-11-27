@@ -16,6 +16,9 @@ main() ->
                                        #flash { id=flash },
                                        #panel { id=test }
                                       ]}},
+
+    wf:wire(submit, username, #validate { attach_to=username, validators=[#is_required { text="Error: no username given." }] }),
+
     wf:render(Body).
 
 event (login) ->
