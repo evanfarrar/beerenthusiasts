@@ -5,11 +5,17 @@
 main () ->    
     {ok, Results, _} = rfc4627:decode(couchdb_util:doc_get_all (wf:user())),
     %io:format ("~w~n", [Results]),
-    {obj,[{"total_rows",_TotalRows},
-          {"offset",_Offset},
-          {"rows",
-           Recipes}]} = Results,
-    Links = create_links (Recipes),
+    case Results of
+        {obj,[{"total_rows",_TotalRows},
+              {"offset", _Offset},
+              {"rows",
+               Recipes}]} ->
+            Links = create_links (Recipes);
+        {obj,[{"total_rows",_TotalRows},
+              {"rows",
+               Recipes}]} ->
+            Links = create_links (Recipes)
+    end,
     io:format ("~w~n", [Links]),
     Body = #body { body=#panel { style="margin: 50px;", 
                                  body=["Your Recipes:",
