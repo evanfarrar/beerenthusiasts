@@ -19,8 +19,8 @@ db_create(DatabaseName) when is_binary(DatabaseName) ->
 
 db_create(DatabaseName) ->
     Path = lists:flatten(io_lib:format("/~s/", [DatabaseName])),
-    _Reply = couchdb_util:put (Path, []),
-    handle_reply(_Reply).
+    _Reply = couchdb_util:put (Path, []).
+    %handle_reply(_Reply).
 
 %% @spec db_delete(DatabaseName::string()) -> ok | {error, Reason::term()}
 %%
@@ -31,8 +31,8 @@ db_delete(DatabaseName) when is_binary(DatabaseName) ->
 
 db_delete(DatabaseName) ->
     Path = lists:flatten(io_lib:format("/~s/", [DatabaseName])),
-    _Reply = delete (Path, []),
-    handle_reply(_Reply).
+    _Reply = delete (Path, []).
+    %handle_reply(_Reply).
 
 %% @spec db_list() -> ok | {error, Reason::term()}
 %%
@@ -40,8 +40,8 @@ db_delete(DatabaseName) ->
     
 db_list() ->
     Path = "/_all_dbs",
-    _Reply = get (Path, []),
-    handle_reply(_Reply).
+    _Reply = get (Path, []).
+    %handle_reply(_Reply).
 
 %% @spec db_info(DatabaseName::string()) -> {ok, Info::json()} | {error, Reason::term()}
 %%
@@ -57,8 +57,8 @@ db_list() ->
 
 db_info(DatabaseName) ->
     Path = lists:flatten(io_lib:format("/~s", [DatabaseName])),
-    _Reply = gen_server:call(ec_listener, {get, Path, []}),
-    handle_reply(_Reply).
+    _Reply = gen_server:call(ec_listener, {get, Path, []}).
+    %handle_reply(_Reply).
 
 %% @spec doc_create(DatabaseName::string(), Doc::json()) -> {ok, Response::json()} | {error, Reason::term()}
 %%
@@ -67,8 +67,8 @@ db_info(DatabaseName) ->
 doc_create(DatabaseName, Doc) ->
     DocJson = rfc4627:encode(Doc),
     Path = lists:flatten(io_lib:format("/~s/", [DatabaseName])),
-    _Reply = post (Path, DocJson),
-    handle_reply(_Reply).
+    _Reply = post (Path, DocJson).
+    %handle_reply(_Reply).
 
 %% @spec doc_create(DatabaseName::string(), DocName::string(), Doc::json()) -> {ok, Response::json()} | {error, Reason::term()}
 %%
@@ -77,8 +77,8 @@ doc_create(DatabaseName, Doc) ->
 doc_create(DatabaseName, DocName, Doc) ->
     JsonDoc = rfc4627:encode(Doc),
     Path = lists:flatten(io_lib:format("/~s/~s", [DatabaseName, DocName])),
-    _Reply = couchdb_util:put (Path, JsonDoc),
-    handle_reply(_Reply).
+    _Reply = couchdb_util:put (Path, JsonDoc).
+    %handle_reply(_Reply).
 
 %% @spec doc_bulk_create(DatabaseName::string(), DocList) -> {ok, Response::json()} | {error, Reason::term()}
 %%     DocList = [json()]
@@ -88,8 +88,8 @@ doc_create(DatabaseName, DocName, Doc) ->
 doc_bulk_create(DatabaseName, DocList) ->
     BulkDoc = rfc4627:encode({obj, [{"docs", DocList}]}),
     Path = lists:flatten(io_lib:format("/~s/~s", [DatabaseName, "_bulk_docs"])),
-    _Reply = post (Path, BulkDoc),
-    handle_reply(_Reply).
+    _Reply = post (Path, BulkDoc).
+    %handle_reply(_Reply).
     
 %% @spec doc_update(DatabaseName::string(), DocName::string(), Doc::json()) -> {ok, Response::json()} | {error, Reason::term()}
 %%
@@ -112,8 +112,8 @@ doc_bulk_update(DatabaseName, DocListRev) ->
 
 doc_delete(DatabaseName, DocName, Rev) ->
     Path = lists:flatten(io_lib:format("/~s/~s", [DatabaseName, DocName])),
-    _Reply = delete (Path, [{"rev", Rev}]),
-    handle_reply(_Reply).
+    _Reply = delete (Path, [{"rev", Rev}]).
+    %handle_reply(_Reply).
 
 %% @spec doc_get(DatabaseName::string(), DocName::string) -> {ok, Response::json()} | {error, Reason::term()}
 %%
@@ -128,8 +128,8 @@ doc_get(DatabaseName, DocName) ->
 
 doc_get(DatabaseName, DocName, Options) ->
     Path = lists:flatten(io_lib:format("/~s/~s", [DatabaseName, DocName])),
-    _Reply = get (Path, Options),
-    handle_reply(_Reply).
+    _Reply = get (Path, Options).
+    %handle_reply(_Reply).
 
 %% @spec doc_get_all(DatabaseName::string()) -> {ok, Response::json()} | {error, Reason::term()}
 %%
@@ -144,8 +144,8 @@ doc_get_all(DatabaseName) ->
 
 doc_get_all(DatabaseName, Options) ->
     Path = lists:flatten(io_lib:format("/~s/_all_docs", [DatabaseName])),
-    _Reply = get (Path, Options),
-    handle_reply(_Reply).
+    _Reply = get (Path, Options).
+    %handle_reply(_Reply).
 
 %% @hidden
 
@@ -186,8 +186,8 @@ view_adhoc(DatabaseName, Fun) ->
 
 view_adhoc(DatabaseName, Fun, Options) ->
     Path = lists:flatten(io_lib:format("/~s/_temp_view", [DatabaseName])),
-    _Reply = post (Path, Fun, "text/javascript", Options),
-    handle_reply(_Reply).
+    _Reply = post (Path, Fun, "text/javascript", Options).
+    %handle_reply(_Reply).
 
 %% @hidden
 
@@ -198,39 +198,39 @@ view_access(DatabaseName, DesignName, ViewName) ->
 
 view_access(DatabaseName, DesignName, ViewName, Options) ->
     Path = lists:flatten(io_lib:format("/~s/_view/~s/~s", [DatabaseName, DesignName, ViewName])),
-    _Reply = get (Path, Options),
-    handle_reply(_Reply).
+    _Reply = get (Path, Options).
+    %handle_reply(_Reply).
 
 %%% Access Functions
 
 get (Path, Options) ->
     QueryString = query_string(Options),
     Url = lists:flatten(io_lib:format("http://~s:~s~s~s", [?Host, ?Port, Path, QueryString])),
-    _Reply = http_g_request(Url),    
-    {stop, "Normal"}.
+    _Reply = http_g_request(Url).
+    %{stop, "Normal"}.
 
 post (Path, Doc) ->   
     Url = lists:flatten(io_lib:format("http://~s:~s~s", [?Host, ?Port, Path])),
     io:format ("~s~n", [Url]),
-    _Reply = http_p_request(post, Url, Doc),
-    {stop, "Normal"}.
+    _Reply = http_p_request(post, Url, Doc).
+    %{stop, "Normal"}.
 
 post (Path, Doc, ContentType, Options) ->
     QueryString = query_string(Options),
     Url = lists:flatten(io_lib:format("http://~s:~s~s~s", [?Host, ?Port, Path, QueryString])),
-    _Reply = http_p_request(post, Url, Doc, ContentType),
-    {stop, "Normal"}.
+    _Reply = http_p_request(post, Url, Doc, ContentType).
+    %{stop, "Normal"}.
 
 put (Path, Doc) ->
     Url = lists:flatten(io_lib:format("http://~s:~s~s", [?Host, ?Port, Path])),
-    _Reply = http_p_request(put, Url, Doc),
-    {stop, "Normal"}.
+    _Reply = http_p_request(put, Url, Doc).
+    %{stop, "Normal"}.
 
 delete (Path, Options) ->
     QueryString = query_string(Options),
     Url = lists:flatten(io_lib:format("http://~s:~s~s~s", [?Host, ?Port, Path, QueryString])),
-    _Reply = http_d_request(Url),
-    {stop, "Normal"}.
+    _Reply = http_d_request(Url).
+    %{stop, "Normal"}.
 
 query_string(Options) ->
     query_string(Options, "?", []).
