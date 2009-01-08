@@ -1,0 +1,10 @@
+h1. Beer Enthusiasts: a webthang
+
+Beer Enthusiasts is a homebreweing and beer lovers webapp written in Erlang and using Nitrogen, Couchdb and Mnesia.
+
+The site is intended to house a body of knowledge regarding:
+
+* Beers
+* Recipes
+* Ingredients
+* News
