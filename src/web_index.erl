@@ -18,20 +18,13 @@
 -compile(export_all).
 
 main() ->
-  #template { file="./wwwroot/post_template.html" }.
+  case wf:user() of
+    undefined -> Header = "./wwwroot/new_user_template.html";
+    _ -> Header = "./wwwroot/user_template.html"
+  end,
+  #template { file=Header }.
   
 title() -> "Beer Enthusiasts".
-
-headline() -> "Beer Enthusiasts".
-
-header() -> 
-  case wf:user() of
-    undefined -> Header = "<a href=\"register\">Register </ahref><a href=\"login\"> Login</a>";
-    _ -> Header = "<a href=\"your_page\">Your Page </ahref><a href=\"logout\"> Logout</a>"
-  end,
-  
-  [Header].
-
 
 body() -> 
   [#br{}, #br{},
