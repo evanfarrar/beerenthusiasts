@@ -15,9 +15,19 @@
 
 -module (web_calc).
 -include ("wf.inc").
--export ([main/0, event/1]).
+-compile(export_all).
 
 main() ->
+  #template { file="./wwwroot/onecolumn.html", 
+              bindings=[{'Group', learn},{'Item', samples}]}.
+  
+title() -> "Homebrew Calculator".
+
+headline() -> "Homebrew Calculator".
+
+%%right() -> linecount:render().
+
+oldbody() ->
   Cell1 = #tablecell { body = [#br{},
 	                       "Original: ",
 	                       #br{},
@@ -49,8 +59,43 @@ main() ->
 		                                              #panel { id=test2 },
 		                                              #panel { id=test3 },
 		                                              #panel { id=test4 }] } },
-	wf:render(Body).
-	
+  wf:render(Body).
+
+
+body() -> 
+  Cell1 = #tablecell { body = [#br{},
+	                       "Original: ",
+	                       #br{},
+	                       "Final: " ] },
+  Cell2 = #tablecell { body = ["Measurement",
+	                       #br{},
+	                       #textbox { id=myTextboxOG, text="1.050"},
+	                       #br{},
+	                       #textbox { id=myTextboxFG, text="1.010" } ] },
+  Cell3 = #tablecell { body =  ["Scale",
+	                        #br{},
+	                        #dropdown{id = meas, options=[#option{text="Specific Gravity", value="SG", selected=true},
+		                                              #option{text="Degrees Plato", value="DP"}]}]},
+  Cell4 = #tablecell { body = ["Temperature",
+	                       #br{},
+	                       #textbox { id=myTextboxT1, text="60" },
+	                       #br{},
+	                       #textbox { id=myTextboxT2, text="60" } ] },
+  Cell5 = #tablecell { body = ["Scale",
+	                       #br{},
+	                       #dropdown{id = temp, options=[#option{text="Fahrenheit", value="F", selected=true},
+		                                             #option{text="Celsius", value="C"}]}]},
+  Row1 =  #tablerow {cells = [Cell1, Cell2, Cell3, Cell4, Cell5] },
+  
+  ["Gravity/ ABV Calculator",
+   #table {rows=[Row1]},
+   #button { text="Submit", postback=go },
+   #button { text="Reset", postback=reset },
+   #panel { id=test1 },
+   #panel { id=test2 },
+   #panel { id=test3 },
+   #panel { id=test4 }].
+
 event(go) ->
   MScale = hd(wf:q(meas)),
   TScale = hd(wf:q(temp)),
