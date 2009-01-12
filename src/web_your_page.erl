@@ -13,18 +13,25 @@
 %%% You should have received a copy of the GNU Affero General Public License
 %%% along with beerenthusiasts.  If not, see <http://www.gnu.org/licenses/>.
 
+
 -module (web_your_page).
 -include ("wf.inc").
--export ([main/0, event/1]).
+-compile(export_all).
 
-main () ->    
-    case wf:user() of
+main() ->
+
+  case wf:user() of
         undefined ->
             wf:redirect("register"),
             Header = "";
-        _ ->
-            Header = "user_header"
+        _ -> Header = "./wwwroot/user_template.html"
     end,
+  #template { file=Header }.
+  
+title() -> "Beer Enthusiasts".
+
+body () ->    
+    
     
     {ok, Results, _} = rfc4627:decode(couchdb_util:doc_get_all (wf:user())),
     %io:format ("~w~n", [Results]),
@@ -40,19 +47,16 @@ main () ->
             Links = create_links (Recipes)
     end,
     io:format ("~w~n", [Links]),
-    Template = #template {file="main_template", title="Your Page",
-                          section1 = #panel { style="margin: 50px;", 
-                                 body=[
-                                       #file { file=Header },
-                                       #link {text="Create Recipe", url="edit_recipe"},
-                                       #br{},
-                                       "Your Recipes:",
-                                       #br{},
-                                       #flash { id=flash },
-                                       #panel { id=test }
-                                      ]}},
-    wf:render(Template).
-
+     
+   [ 
+     #link {text="Create Recipe", url="edit_recipe"},
+     #br{},
+     "Your Recipes:",
+     #br{},
+     #flash { id=flash },
+     #panel { id=test }
+   ].
+				      
 event (_) ->
     ok.
  

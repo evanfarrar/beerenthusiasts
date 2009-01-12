@@ -15,7 +15,7 @@
 
 -module (web_edit_recipe).
 -include ("wf.inc").
--export ([main/0, event/1, id_loop/2]).
+-compile(export_all).
 
 -define (FERMENTABLE, "fermentables").
 -define (HOP, "hops").
@@ -24,15 +24,19 @@
 %% Just learning... 
 
 main() ->
-    case wf:user() of        
-        undefined ->
-            Header = "new_user_header",
-            wf:redirect ("register");
-        _ ->
-            Header = "user_header",
-            ok
-    end,
 
+  case wf:user() of
+        undefined ->
+            wf:redirect("register"),
+            Header = "";
+        _ -> Header = "./wwwroot/user_template.html"
+    end,
+  #template { file=Header }.
+  
+title() -> "Beer Enthusiasts".
+
+body () ->    
+    
     Name = wf:q(name),
     case Name of
         [] ->
@@ -51,46 +55,6 @@ main() ->
     Fermentables = spawn (web_edit_recipe, id_loop, [[], ?FERMENTABLE]),
     Hops = spawn (web_edit_recipe, id_loop, [[], ?HOP]),
     Others = spawn (web_edit_recipe, id_loop, [[], ?OTHER]),
-
-    Template = #template {file="main_template", title="Edit Recipe",
-                          section1 = #panel { style="margin: 50px;", 
-                                              body=[
-                                                    #file { file=Header },                         
-                                                    "Name:",
-                                                    #br{},
-                                                    #panel { id=name_panel },
-                                                    #br{},
-                                                    "Fermentables:",                                       
-                                                    #br{},
-                                                    #panel { id=fermentables_flash },
-                                                    #br{},                                                    
-                                                    "Hops:",
-                                                    #br{},
-                                                    #panel { id=hops_flash },
-                                                    #br{},                                                    
-                                                    "Other:",
-                                                    #br{},
-                                                    #panel { id=others_flash },                                                    
-                                                    #br{},
-                                                    "Yeast:",
-                                                    #br{},
-                                                    #panel { id=yeast_panel },
-                                                    #br{},
-                                                    "Instructions:",
-                                                    #br{},
-                                                    #panel { id=instructions_panel },                                    
-                                                    #br{},
-                                                    "Post Brewing Notes:",
-                                                    #br{},
-                                                    #panel { id=notes_panel },                                            
-                                                    #br{},
-                                                    "Final Beer Description:",
-                                                    #br{},
-                                                    #panel { id=desc_panel },
-                                                    #br{},
-                                                    #button { id=save, text="Save", postback={save, Fermentables, Hops, Others} },
-                                                    #flash { id=flash }
-                                                   ]}},
     
     case lists:keysearch ("ingredients", 1, Doc) of
         {value, {_, {obj, List}}} ->
@@ -110,7 +74,42 @@ main() ->
 
     wf:wire(save, name, #validate { attach_to=name, validators=[#is_required { text="Required." }] }),
 
-    wf:render(Template).
+    
+    ["Name:",
+     #br{},
+     #panel { id=name_panel },
+     #br{},
+     "Fermentables:",                                       
+     #br{},
+     #panel { id=fermentables_flash },
+     #br{},                                                    
+     "Hops:",
+     #br{},
+     #panel { id=hops_flash },
+     #br{},                                                    
+     "Other:",
+     #br{},
+     #panel { id=others_flash },                                                    
+     #br{},
+     "Yeast:",
+     #br{},
+     #panel { id=yeast_panel },
+     #br{},
+     "Instructions:",
+     #br{},
+     #panel { id=instructions_panel },                                    
+     #br{},
+     "Post Brewing Notes:",
+     #br{},
+     #panel { id=notes_panel },                                            
+     #br{},
+     "Final Beer Description:",
+     #br{},
+     #panel { id=desc_panel },
+     #br{},
+     #button { id=save, text="Save", postback={save, Fermentables, Hops, Others} },
+     #flash { id=flash }
+    ].
 
 event({save, Fermentables, Hops, Others}) ->
     Fermentables ! {get_list, self()},

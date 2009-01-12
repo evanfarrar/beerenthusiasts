@@ -15,19 +15,27 @@
 
 -module (web_search).
 -include ("wf.inc").
--export ([main/0, event/1]).
+-compile(export_all).
 
-main () ->    
+main() ->
+  
+  case wf:user() of
+    undefined -> Header = "./wwwroot/new_user_template.html";
+    _ -> Header = "./wwwroot/user_template.html"
+  end,
+  #template { file=Header }.
+  
+title() -> "Beer Enthusiasts".
+
+body() -> 
     Terms = wf:q (terms),
     Results = get_results (Terms),
-    Body = #body { body=#panel { style="margin: 50px;", 
-                                 body=["Results:",
+    ["Results:",
                                        #br{},
                                        rfc4627:encode(Results),
                                        #flash { id=flash },
                                        #panel { id=test }
-                                      ]}},
-    wf:render(Body).
+                                      ].
 
 event (_) -> 
     ok.
