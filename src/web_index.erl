@@ -15,29 +15,30 @@
 
 -module (web_index).
 -include ("wf.inc").
--export ([main/0, event/1]).
+-compile(export_all).
 
-main () ->    
-    case wf:user() of
-        undefined ->
-            Header = "new_user_header";
-        _ ->
-            Header = "user_header"
-    end,
+main() ->
+  #template { file="./wwwroot/post_template.html" }.
+  
+title() -> "Beer Enthusiasts".
 
-    Template = #template {file="post_template", title="Beer Enthusiasts",
-                          section1 = #panel { style="margin: 50px;", 
-                                             body=[
-                                                   #file { file=Header },
-                                                   #br{}, #br{},
-                                                   #textbox { id=terms },
-                                                   #br{},
-                                                   "<input type=\"submit\" value=\"Search\" />",
-                                                   #flash { id=flash },
-                                                   #panel { id=test }
-                                                  ]}},
-    
-    wf:render (Template).
+headline() -> "Beer Enthusiasts".
 
-event (_) -> 
-    ok.
+header() -> 
+  case wf:user() of
+    undefined -> Header = "<a href=\"register\">Register </ahref><a href=\"login\"> Login</a>";
+    _ -> Header = "<a href=\"your_page\">Your Page </ahref><a href=\"logout\"> Logout</a>"
+  end,
+  
+  [Header].
+
+
+body() -> 
+  [#br{}, #br{},
+   #textbox { id=terms },
+   #br{},
+   "<input type=\"submit\" value=\"Search\" />",
+   #flash { id=flash },
+   #panel { id=test }].
+
+event (_) -> ok.
