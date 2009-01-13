@@ -21,5 +21,5 @@ mnesia_init () ->
     db_backend:init().
 
 couchdb_init () ->
-    couchdb_util:start(),
-    couchdb_util:db_create ("recipes").
+    couchdb_utils:start(),
+    couchdb_utils:db_create ("recipes").

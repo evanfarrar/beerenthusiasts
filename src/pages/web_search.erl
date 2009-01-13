@@ -41,4 +41,4 @@ event (_) ->
     ok.
 
 get_results (_Terms) ->
-    couchdb_util:doc_get_all ("kung").
+    couchdb_utils:doc_get_all ("kung").

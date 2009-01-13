@@ -30,7 +30,7 @@ body() ->
 
     DocId = wf:q (doc_id),
     User = wf:q (user),
-    Doc = rfc4627:encode(couchdb_util:doc_get (User, DocId)),
+    Doc = rfc4627:encode(couchdb_utils:doc_get (User, DocId)),
 
     ["Recipe:",
      #br{},

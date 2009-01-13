@@ -44,7 +44,7 @@ add_user (Username, EmailAddress, Password) ->
     Row = #users{username=Username, email_address=EmailAddress, password=PasswordDigest},   
     case write (Row) of
         {atomic, Val} ->
-            couchdb_util:db_create (Username),
+            couchdb_utils:db_create (Username),
             ok;
         {aborted, Reason} ->
             io:format ("Adding user failed!~nRow: ~s aborted.~nReason: ~s~n", [Row, Reason]),

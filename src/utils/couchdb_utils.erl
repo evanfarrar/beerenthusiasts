@@ -13,7 +13,7 @@
 %%% You should have received a copy of the GNU Affero General Public License
 %%% along with beerenthusiasts.  If not, see <http://www.gnu.org/licenses/>.
 
--module (couchdb_util).
+-module (couchdb_utils).
 -compile (export_all).
 
 -define (GDB, "test").
@@ -34,7 +34,7 @@ db_create(DatabaseName) when is_binary(DatabaseName) ->
 
 db_create(DatabaseName) ->
     Path = lists:flatten(io_lib:format("/~s/", [DatabaseName])),
-    _Reply = couchdb_util:put (Path, []).
+    _Reply = couchdb_utils:put (Path, []).
     %handle_reply(_Reply).
 
 %% @spec db_delete(DatabaseName::string()) -> ok | {error, Reason::term()}
@@ -92,7 +92,7 @@ doc_create(DatabaseName, Doc) ->
 doc_create(DatabaseName, DocName, Doc) ->
     JsonDoc = rfc4627:encode(Doc),
     Path = lists:flatten(io_lib:format("/~s/~s", [DatabaseName, DocName])),
-    _Reply = couchdb_util:put (Path, JsonDoc).
+    _Reply = couchdb_utils:put (Path, JsonDoc).
     %handle_reply(_Reply).
 
 %% @spec doc_bulk_create(DatabaseName::string(), DocList) -> {ok, Response::json()} | {error, Reason::term()}

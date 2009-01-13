@@ -28,7 +28,7 @@ title() -> "Beer Enthusiasts".
 
 body() -> 
     User = hd(wf:q(user)),
-    Recipes = couchdb_util:doc_get_all (User),    
+    Recipes = couchdb_utils:doc_get_all (User),    
     [User ++ " Recipes:",
                                        #br{},
                                        %rfc4627:encode(Recipes),

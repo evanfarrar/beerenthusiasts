@@ -33,7 +33,7 @@ title() -> "Beer Enthusiasts".
 body () ->    
     
     
-    {ok, Results, _} = rfc4627:decode(couchdb_util:doc_get_all (wf:user())),
+    {ok, Results, _} = rfc4627:decode(couchdb_utils:doc_get_all (wf:user())),
     %io:format ("~w~n", [Results]),
     case Results of
         {obj,[{"total_rows",_TotalRows},
