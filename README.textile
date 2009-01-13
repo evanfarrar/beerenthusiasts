@@ -1,4 +1,4 @@
-h1. Beer Enthusiasts: a webthang
+h1. Beer Enthusiasts: 
 
 Beer Enthusiasts is a homebreweing and beer lovers webapp written in Erlang and using Nitrogen, Couchdb and Mnesia.
 
@@ -8,3 +8,10 @@ The site is intended to house a body of knowledge regarding:
 * Recipes
 * Ingredients
 * News
+
+How to start:
+
+* Install Nitrogen and cp or link it to /opt/erlang-libs/nitrogen-master
+* Edit ~/.profile and add: export ERL_LIBS=/opt/erlang-libs/
+* source ~/.profile
+* ./start
