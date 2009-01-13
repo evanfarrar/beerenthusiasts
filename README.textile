@@ -11,16 +11,16 @@ The site is intended to house a body of knowledge regarding:
 
 How to start:
 
- With inets:
+ Configuration:
   * Install Nitrogen and cp or link it to /opt/erlang-libs/nitrogen-master
-  * Edit ~/.profile and add: export ERL_LIBS=/opt/erlang-libs/
-  * source ~/.profile
+  * Edit config.profile (note: ERL_LIBS should be /opt/erlang-libs/)
+  * source config.profile
+  * Edit include/config.inc - or just leave it alone
+    
+ With inets:
   * ./start_inets.sh
 
  With yaws:
-  * Install Nitrogen and cp or link it to /opt/erlang-libs/nitrogen-master
-  * Edit ~/.profile and add: export ERL_LIBS=/opt/erlang-libs/
-  * source ~/.profile
   * Download and compile yaws, http://yaws.hyber.org/download/
   * Edit start_yaws.sh:
       export NITROGEN_SRC=?
