@@ -15,10 +15,7 @@
 
 -module (couchdb_utils).
 -compile (export_all).
-
--define (GDB, "test").
--define (Port, "5984").
--define (Host, "localhost").
+-include ("config.inc").
 
 start () ->    
     application:start(inets).
@@ -220,30 +217,30 @@ view_access(DatabaseName, DesignName, ViewName, Options) ->
 
 get (Path, Options) ->
     QueryString = query_string(Options),
-    Url = lists:flatten(io_lib:format("http://~s:~s~s~s", [?Host, ?Port, Path, QueryString])),
+    Url = lists:flatten(io_lib:format("http://~s:~s~s~s", [?COUCHDB_SERVER, ?COUCHDB_PORT, Path, QueryString])),
     _Reply = http_g_request(Url).
     %{stop, "Normal"}.
 
 post (Path, Doc) ->   
-    Url = lists:flatten(io_lib:format("http://~s:~s~s", [?Host, ?Port, Path])),
+    Url = lists:flatten(io_lib:format("http://~s:~s~s", [?COUCHDB_SERVER, ?COUCHDB_PORT, Path])),
     io:format ("~s~n", [Url]),
     _Reply = http_p_request(post, Url, Doc).
     %{stop, "Normal"}.
 
 post (Path, Doc, ContentType, Options) ->
     QueryString = query_string(Options),
-    Url = lists:flatten(io_lib:format("http://~s:~s~s~s", [?Host, ?Port, Path, QueryString])),
+    Url = lists:flatten(io_lib:format("http://~s:~s~s~s", [?COUCHDB_SERVER, ?COUCHDB_PORT, Path, QueryString])),
     _Reply = http_p_request(post, Url, Doc, ContentType).
     %{stop, "Normal"}.
 
 put (Path, Doc) ->
-    Url = lists:flatten(io_lib:format("http://~s:~s~s", [?Host, ?Port, Path])),
+    Url = lists:flatten(io_lib:format("http://~s:~s~s", [?COUCHDB_SERVER, ?COUCHDB_PORT, Path])),
     _Reply = http_p_request(put, Url, Doc).
     %{stop, "Normal"}.
 
 delete (Path, Options) ->
     QueryString = query_string(Options),
-    Url = lists:flatten(io_lib:format("http://~s:~s~s~s", [?Host, ?Port, Path, QueryString])),
+    Url = lists:flatten(io_lib:format("http://~s:~s~s~s", [?COUCHDB_SERVER, ?COUCHDB_PORT, Path, QueryString])),
     _Reply = http_d_request(Url).
     %{stop, "Normal"}.
 

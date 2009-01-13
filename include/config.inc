@@ -16,6 +16,10 @@
 -ifndef(config_inc).
 -define(config_inc, ok).
 
+-define (COUCHDB_RECIPES_DB_NAME, "recipes").
+-define (COUCHDB_SERVER, "localhost").
+-define (COUCHDB_PORT, 5948).
 
+-define (MNESIA_USERS_DB_NAME, "users").
 
 -endif.
