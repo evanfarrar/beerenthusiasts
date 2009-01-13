@@ -15,7 +15,7 @@
 
 -module (sync_configuration).
 -include ("wf.inc").
--export ([get_node_types/1, get_nodes/2, start_application/3]).
+%%-export ([get_node_types/1, get_nodes/2, start_application/3]).
 
 %% Configuration file for the Nitrogen 'sync' utility.
 %%
