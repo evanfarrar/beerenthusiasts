@@ -22,6 +22,7 @@ ln -s $NITROGEN_SRC/www wwwroot/nitrogen
 echo Starting Nitrogen on Yaws...
 exec erl \
 	-name nitrogen@127.0.0.1 \
+	-mnesia dir '"'$MNESIADB_DIR'"' \	
 	-pa $PWD/apps $PWD/ebin $PWD/include \
 	-pa $NITROGEN_SRC/ebin $NITROGEN_SRC/include \
 	-pa $YAWS_SRC/ebin $YAWS_SRC/include \
