@@ -18,8 +18,8 @@
 
 -define (COUCHDB_RECIPES_DB_NAME, "recipes").
 -define (COUCHDB_SERVER, "localhost").
--define (COUCHDB_PORT, 5948).
+-define (COUCHDB_PORT, "5984").
 
--define (MNESIA_USERS_DB_NAME, "users").
+-record (users, {username, email_address, password}).
 
 -endif.
