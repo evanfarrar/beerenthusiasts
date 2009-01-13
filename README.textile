@@ -11,11 +11,19 @@ The site is intended to house a body of knowledge regarding:
 
 How to start:
 
+ Dependencies:
+  * Erlang
+  * CouchDB
+
  Configuration:
   * Install Nitrogen and cp or link it to /opt/erlang-libs/nitrogen-master
   * Edit config.profile (note: ERL_LIBS should be /opt/erlang-libs/)
   * source config.profile
   * Edit include/config.inc - or just leave it alone
+    
+ Databases:
+  * run ./scripts/mnesia_init.sh which will create the DB in MNESIADB_DIR
+  * run ./scripts/couchdb_init.sh which will create the COUCHDB_RECIPES_DB_NAME db for storing the recipes  
     
  With inets:
   * ./start_inets.sh
