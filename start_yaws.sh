@@ -1,8 +1,5 @@
 #!/bin/bash
 
-export NITROGEN_SRC=/home/tristan/Devel/nitrogen
-export YAWS_SRC=/home/tristan/Desktop/yaws
-
 cd `dirname $0`
 
 if [[ -d $YAWS_SRC ]]; then
