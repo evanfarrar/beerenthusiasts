@@ -15,11 +15,10 @@
 
 -module (db_backend).
 -include ("wf.inc").
+-include ("config.inc").
 -export ([init/0, start/0, stop/0, validate/2, add_user/3, is_username_used/1]).
 
 -include_lib ("stdlib/include/qlc.hrl").
-
--record (users, {username, email_address, password}).
 
 %%% Initialize database and tables. Only run once!
 init () ->
