@@ -14,4 +14,4 @@ How to start:
 * Install Nitrogen and cp or link it to /opt/erlang-libs/nitrogen-master
 * Edit ~/.profile and add: export ERL_LIBS=/opt/erlang-libs/
 * source ~/.profile
-* ./start
+* ./start_inets.sh
