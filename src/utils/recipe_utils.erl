@@ -20,8 +20,8 @@
 -include_lib ("stdlib/include/qlc.hrl").
 
 get_user_recipes (Username, PageNum) ->
-    Options = "count=10&skip=" ++ integer_to_list(PageNum*10 + 1),
-    couchdb_utils:view_access("recipes", "user_recipes", Username, Options).
+    Options = [{count, 10}, {skip, integer_to_list(PageNum*10)}],
+    couchdb_util:view_access("recipes", "user_recipes", Username, Options).
 
 create_recipe () ->
     ok.
