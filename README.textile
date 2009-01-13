@@ -11,7 +11,17 @@ The site is intended to house a body of knowledge regarding:
 
 How to start:
 
-* Install Nitrogen and cp or link it to /opt/erlang-libs/nitrogen-master
-* Edit ~/.profile and add: export ERL_LIBS=/opt/erlang-libs/
-* source ~/.profile
-* ./start_inets.sh
+ With inets:
+  * Install Nitrogen and cp or link it to /opt/erlang-libs/nitrogen-master
+  * Edit ~/.profile and add: export ERL_LIBS=/opt/erlang-libs/
+  * source ~/.profile
+  * ./start_inets.sh
+
+ With yaws:
+  * Download and compile yaws, http://yaws.hyber.org/download/
+  * Edit start_yaws.sh:
+      export NITROGEN_SRC=?
+      export YAWS_SRC=?
+  * Edit ebin/beerenthusiasts.app
+      Change {platform, inets}, to {platform, yaws},
+  * ./start_yaws.sh
