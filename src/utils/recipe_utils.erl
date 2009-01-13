@@ -15,13 +15,13 @@
 
 -module (recipe_utils).
 -include ("wf.inc").
--export ([get_user_recipes/1, create_recipe/0, delete_recipe/0, get_recipe/0, save_recipe/0]).
+-export ([get_user_recipes/2, create_recipe/0, delete_recipe/0, get_recipe/0, save_recipe/0]).
 
 -include_lib ("stdlib/include/qlc.hrl").
 
 get_user_recipes (Username, PageNum) ->
     Options = "count=10&skip=" ++ integer_to_list(PageNum*10 + 1),
-    couchdb_utils:view_access("recipes", DesignName, Username, Options).
+    couchdb_utils:view_access("recipes", "user_recipes", Username, Options).
 
 create_recipe () ->
     ok.
