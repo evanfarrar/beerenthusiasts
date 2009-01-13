@@ -18,6 +18,9 @@ How to start:
   * ./start_inets.sh
 
  With yaws:
+  * Install Nitrogen and cp or link it to /opt/erlang-libs/nitrogen-master
+  * Edit ~/.profile and add: export ERL_LIBS=/opt/erlang-libs/
+  * source ~/.profile
   * Download and compile yaws, http://yaws.hyber.org/download/
   * Edit start_yaws.sh:
       export NITROGEN_SRC=?
