@@ -37,27 +37,21 @@ title() -> "Beer Enthusiasts".
 
 body () ->    
     
-    Name = wf:q(name),
-    case Name of
+    ID = wf:q(id),
+    case ID of
         [] ->
             Doc = [],
             ok;    
         _ ->            
-            case rfc4627:decode(couchdb_util:doc_get (wf:user(), Name)) of                
-                {error, _Reason} ->
-                    Doc = [],
-                    ok;
-                {ok, {obj, Doc}, _} -> 
-                    ok
-            end
+            Doc = recipe_utils:get_recipe (ID)
     end,
     
     Fermentables = spawn (web_edit_recipe, id_loop, [[], ?FERMENTABLE]),
     Hops = spawn (web_edit_recipe, id_loop, [[], ?HOP]),
     Others = spawn (web_edit_recipe, id_loop, [[], ?OTHER]),
     
-    case lists:keysearch ("ingredients", 1, Doc) of
-        {value, {_, {obj, List}}} ->
+    case lists:keysearch ("name", 1, Doc) of
+        {value, {{_, _}, {_, Name}, {_, {obj, List}}}} ->
             wf:update (name_panel, [#textbox {text=Name}]),
             build_page (List, Fermentables, Hops, Others);
         false ->
@@ -107,11 +101,11 @@ body () ->
      #br{},
      #panel { id=desc_panel },
      #br{},
-     #button { id=save, text="Save", postback={save, Fermentables, Hops, Others} },
+     #button { id=save, text="Save", postback={save, ID, Fermentables, Hops, Others} },
      #flash { id=flash }
     ].
 
-event({save, Fermentables, Hops, Others}) ->
+event({save, ID, Fermentables, Hops, Others}) ->
     Fermentables ! {get_list, self()},
     receive
         Fermentables_List ->            
@@ -121,7 +115,7 @@ event({save, Fermentables, Hops, Others}) ->
                     Others ! {get_list, self()},
                     receive
                         Others_List ->
-                            store_recipe ([Fermentables_List] ++ [Hops_List] ++ [Others_List] ++ 
+                            store_recipe (ID, [Fermentables_List] ++ [Hops_List] ++ [Others_List] ++ 
                                           [{yeast, yeast}, {instructions, instructions}, {notes, notes}, {description, description}]),
                             wf:flash ("Successfully Saved Recipe.")
                     end
@@ -178,18 +172,8 @@ id_loop (List, Type) ->
             id_loop (List, Type)
     end.
 
-store_recipe (List) ->
-    JSON = {obj,
-            [{ingredients, 
-              {obj, 
-               lists:foldr (fun (X, L) -> [create_json (X) | L] end, [], List) }}]},
-    %io:format ("~w~n", [JSON]),
-    couchdb_util:doc_create(wf:user(), wf:q(name), JSON).
-
-create_json ({Type, Type}) ->
-    {Type, list_to_binary(hd(wf:q(Type)))}; 
-create_json ({Type, List}) ->   
-    {list_to_binary(Type), [[list_to_binary(hd(wf:q(X))) || X <- L] || L <- List]}.
+store_recipe (ID, Recipe) ->
+    recipe_utils:recipe_create (ID, wf:user(), wf:q(name), Recipe).
 
 new_fermentables (PID, One, Two, Three, Text1, Text2, Text3) ->
     new_flash (ferms, PID, [#textbox { id=One, text=Text1 },
