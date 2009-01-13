@@ -22,7 +22,7 @@
 %%% Return recipes 10 at a time
 get_user_recipes (Username, PageNum) ->
     Options = [{count, 10}, {skip, integer_to_list(PageNum*10)}],
-    couchdb_utils:view_access("recipes", "user_recipes", Username, Options).
+    couchdb_utils:view_access(COUCHDB_RECIPES_DB_NAME, "user_recipes", Username, Options).
 
 save_recipe (ID, Username, RecipeName, Recipe) ->
     JSON = {obj,
@@ -33,16 +33,16 @@ save_recipe (ID, Username, RecipeName, Recipe) ->
                lists:foldr (fun (X, L) -> [create_json (X) | L] end, [], Recipe) }}]},
     if 
         ID =:= [] ->
-            couchdb_utils:doc_create ("recipes", JSON);
+            couchdb_utils:doc_create (COUCHDB_RECIPES_DB_NAME, JSON);
         true ->
-            couchdb_utils:doc_create ("recipes", ID, JSON)
+            couchdb_utils:doc_create (COUCHDB_RECIPES_DB_NAME, ID, JSON)
     end.
 
 delete_recipe () ->
     ok.
 
 get_recipe (Name) ->
-    case rfc4627:decode(couchdb_utils:doc_get ("recipes", Name)) of                
+    case rfc4627:decode(couchdb_utils:doc_get (COUCHDB_RECIPES_DB_NAME, Name)) of                
         {error, Reason} ->
             io:format (Reason),
             [];
