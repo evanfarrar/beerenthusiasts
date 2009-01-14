@@ -44,7 +44,7 @@ add_user (Username, EmailAddress, Password) ->
     case write (Row) of
         {atomic, Val} ->
             couchdb_utils:db_create (Username),
-            couchdb_utils:create_user_recipe_view (Username),
+            recipe_utils:create_user_recipe_view (Username),
             ok;
         {aborted, Reason} ->
             io:format ("Adding user failed!~nRow: ~s aborted.~nReason: ~s~n", [Row, Reason]),
@@ -88,7 +88,6 @@ is_username_used (Username) ->
                     true
             end
     end.
-
 
 %%% Run Query Q
 do (Q) ->
