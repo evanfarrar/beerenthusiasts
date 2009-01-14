@@ -16,7 +16,7 @@
 -module (recipe_utils).
 -include ("wf.inc").
 -include ("config.inc").
--export ([get_user_recipes/2, save_recipe/4, delete_recipe/0, get_recipe/1]).
+-export ([get_user_recipes/2, save_recipe/4, delete_recipe/0, get_recipe/1, create_user_recipe_view/1]).
 
 -include_lib ("stdlib/include/qlc.hrl").
 
@@ -55,3 +55,6 @@ create_json ({Type, Type}) ->
     {Type, list_to_binary(hd(wf:q(Type)))}; 
 create_json ({Type, List}) ->   
     {list_to_binary(Type), [[list_to_binary(hd(wf:q(X))) || X <- L] || L <- List]}.
+
+create_user_recipe_view (Username) ->
+    couchdb_utils:view_create (?COUCHDB_RECIPES_DB_NAME, Username, "javascript", {all, "function(doc) { if (doc.Username == '" ++ Username ++ "')  emit(null, doc) }"}, []).

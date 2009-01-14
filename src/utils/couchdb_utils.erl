@@ -159,10 +159,29 @@ doc_get_all(DatabaseName, Options) ->
     _Reply = get (Path, Options).
     %handle_reply(_Reply).
 
+
 %% @hidden
 
-view_create(_ViewName, _Funs) ->
-    {error, "Not implemented"}.
+view_create(Database, ViewClass, Language, Views, Attributes) ->
+    Design = [
+              {<<"_id">>, list_to_binary("_design/" ++ ViewClass)},
+              {<<"language">>, Language},
+              {<<"views">>, {[
+                              begin
+                                  case View of
+                                      {Name, Map} ->
+                                          {Name, {[{<<"map">>, Map}]}};
+                                      {Name, Map, Reduce} ->
+                                          {Name, {[{<<"map">>, Map}, {<<"reduce">>, Reduce}]}}
+                                  end
+                              end || View <- Views
+                                        ]}}
+              | Attributes],
+    JSON = rfc4627:encode (Design),
+    Url = build_uri(Database, "_design/" ++ ViewClass),
+    couchdb_utils:put(Url, JSON).
+
+%%{error, "Not implemented"}.
 
 %% @hidden
 
@@ -291,3 +310,23 @@ handle_reply(Reply) ->
                     {error, Reason}
             end
     end.
+
+build_uri() ->
+    lists:concat(["/"]).
+ 
+%% @private
+build_uri(Database) ->
+    lists:concat(["/", Database]).
+ 
+%% @private
+build_uri(Database, Request) ->
+    lists:concat(["/", Database, "/", Request]).
+ 
+%% @private
+build_uri(Database, Request, Attributes) ->
+    QueryString = build_querystring(Attributes),
+    lists:concat(["/", Database, "/", Request, QueryString]).
+
+build_querystring([]) -> [];
+build_querystring(PropList) ->
+    lists:concat(["?", mochiweb_util:urlencode(PropList)]).
