@@ -35,6 +35,7 @@ start () ->
 
 %%% Stop the database
 stop () ->
+    crypto:stop(),
     mnesia:stop().
 
 %%% Add a user to the mnesia database
@@ -96,7 +97,7 @@ do (Q) ->
         {atomic, Val} ->
             Val;
         {aborted, Reason} ->
-            io:format ("Query: ~s aborted.~nReason: ~s~n", [Q, Reason]),
+            io:format ("Query: ~w aborted.~nReason: ~w~n", [Q, Reason]),
             aborted    
     end.
                 
