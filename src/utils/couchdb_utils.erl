@@ -163,20 +163,20 @@ doc_get_all(DatabaseName, Options) ->
 %% @hidden
 
 view_create(Database, ViewClass, Language, Views, Attributes) ->
-    Design = [
-              {<<"_id">>, list_to_binary("_design/" ++ ViewClass)},
+    Design = {obj,
+              [{<<"_id">>, list_to_binary("_design/" ++ ViewClass)},
               {<<"language">>, Language},
-              {<<"views">>, {[
+              {<<"views">>, {obj, [
                               begin
                                   case View of
                                       {Name, Map} ->
-                                          {Name, {[{<<"map">>, Map}]}};
+                                          {Name, {obj, [{<<"map">>, Map}]}};
                                       {Name, Map, Reduce} ->
-                                          {Name, {[{<<"map">>, Map}, {<<"reduce">>, Reduce}]}}
+                                          {Name, {obj, [{<<"map">>, Map}, {<<"reduce">>, Reduce}]}}
                                   end
                               end || View <- Views
-                                        ]}}
-              | Attributes],
+                                        ]}}]},
+              %%| Attributes],
     JSON = rfc4627:encode (Design),
     Url = build_uri(Database, "_design/" ++ ViewClass),
     couchdb_utils:put(Url, JSON).

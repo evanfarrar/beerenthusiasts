@@ -57,4 +57,4 @@ create_json ({Type, List}) ->
     {list_to_binary(Type), [[list_to_binary(hd(wf:q(X))) || X <- L] || L <- List]}.
 
 create_user_recipe_view (Username) ->
-    couchdb_utils:view_create (?COUCHDB_RECIPES_DB_NAME, Username, "javascript", {all, "function(doc) { if (doc.Username == '" ++ Username ++ "')  emit(null, doc) }"}, []).
+    couchdb_utils:view_create (?COUCHDB_RECIPES_DB_NAME, Username, <<"javascript">>, [{all, list_to_binary("function(doc) { if (doc.username == '" ++ Username ++ "')  emit(null, doc) }")}], []).
