@@ -17,32 +17,41 @@
 -include ("wf.inc").
 -compile(export_all).
 
-main() ->
-  wf:wire(submit, username, #validate { attach_to=username, validators=[#is_required { text="Error: no username given." }] }),
-  
-  case wf:user() of
-    undefined -> Header = "./wwwroot/new_user_template.html";
-    _ -> Header = "./wwwroot/user_template.html"
-  end,
-  #template { file=Header }.
-  
+main() ->  
+    case wf:user() of
+        undefined -> Header = "./wwwroot/new_user_template.html";
+        _ -> Header = "./wwwroot/user_template.html"
+    end,
+    #template { file=Header }.
+
 title() -> "Beer Enthusiasts".
+headline() -> "Validation". 
 
 body() -> 
-  ["Login:",
-   #br{},
-   "Username: ",
-   #textbox { id=username, postback=login },
-   #br{},
-   "Password: ",
-   #password { id=pass, postback=login },
-   #br{},
-   #button {id=submit, text="Login", postback=login},
-   #flash { id=flash },
-   #panel { id=test }
-   ].
+    Body = ["Login:",
+            #br{},
+            #p{},
+            "Username: ",
+            #textbox { id=username, postback=login, next=pass },
+            #br{},
+            #p{},
+            "Password: ",
+            #password { id=pass, postback=login, next=submit },
+            #br{},
+            #p{},
+            #button {id=submit, text="Login", postback=login},
+            #flash { id=flash },
+            #panel { id=test }
+           ],
+    
+    wf:wire(submit, username, #validate { validators=[
+                                                      #is_required { text="Required." }
+                                                     ]}),
+    
+    wf:render(Body).
 
 event (login) ->
+    io:format ("COME ON~n"),
     case db_backend:validate(hd(wf:q(username)), hd(wf:q(pass))) of
         {valid, _ID} ->
             wf:flash ("Correct"),
