@@ -20,6 +20,7 @@ How to start:
   * Edit config.profile (note: ERL_LIBS should be /opt/erlang-libs/)
   * source config.profile
   * Edit include/config.inc - or just leave it alone
+  * ln -s /opt/erlang-libs/nitrogen-master/www ./wwwroot/nitrogen
     
  Databases:
   * run ./scripts/mnesia_init.sh which will create the DB in MNESIADB_DIR
