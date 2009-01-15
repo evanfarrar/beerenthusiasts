@@ -7,4 +7,5 @@ erl \
 	-pa ../ebin -pa ../include/ \
 	-s make all \
 	-eval "db_inits:couchdb_init()" \
-	-s erlang halt
+        -s erlang halt
+

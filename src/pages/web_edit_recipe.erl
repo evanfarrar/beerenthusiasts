@@ -203,15 +203,15 @@ new_others (PID, One, Two, Three, Text1, Text2, Text3) ->
 new_flash (Type, PID, Body) -> 
     FlashID = wf:temp_id(),
                                                 %class=flash, 
-    InnerPanel = #panel { actions=#effect_blinddown 
-                          { target=FlashID, duration=0.4 }, 
+    InnerPanel = #panel { actions=#appear 
+                          { target=FlashID}, %%, duration=0.4 }, 
                           body=[
                                 #panel { class=flash_content, body=Body ++[  #link { text="[New]", 
                                                                                      actions=#event { type=click, target=FlashID, 
                                                                                                       postback={add, Type, PID}}}, 
                                                                              #link { class=flash_close_button, text="[Remove]", 
                                                                                      actions=#event { type=click, target=FlashID, 
-                                                                                                      actions=#effect_blindup {}, 
+                                                                                                      actions=#appear {}, 
                                                                                                       postback={delete, Type, PID}}}]}]},
     [#panel { id=FlashID, style="display: none;", body=InnerPanel}].
 
