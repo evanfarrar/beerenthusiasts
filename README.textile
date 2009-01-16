@@ -20,8 +20,11 @@ How to start:
   * Edit config.profile (note: ERL_LIBS should be /opt/erlang-libs/)
   * source config.profile
   * Edit include/config.inc - or just leave it alone
-  * ln -s /opt/erlang-libs/nitrogen-master/www ./wwwroot/nitrogen
-    
+      Change COUCHDB_PORT and COUCHDB_SERVER as needed
+      
+ Build 
+  * Run make
+     
  Databases:
   * run ./scripts/mnesia_init.sh which will create the DB in MNESIADB_DIR
   * run ./scripts/couchdb_init.sh which will create the COUCHDB_RECIPES_DB_NAME db for storing the recipes  
@@ -31,9 +34,8 @@ How to start:
 
  With yaws:
   * Download and compile yaws, http://yaws.hyber.org/download/
-  * Edit start_yaws.sh:
-      export NITROGEN_SRC=?
-      export YAWS_SRC=?
   * Edit ebin/beerenthusiasts.app
       Change {platform, inets}, to {platform, yaws},
   * ./start_yaws.sh
+  
+ Use you browser to goto http://localhost:8000/web/
