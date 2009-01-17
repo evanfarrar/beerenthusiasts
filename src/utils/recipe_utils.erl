@@ -74,3 +74,13 @@ save_comment (ID, RecipeID, Username, Title, Comment) ->
         true ->
             couchdb_utils:doc_create (?COUCHDB_COMMENTS_DB_NAME, ID, JSON)
     end.
+
+save_profile (Username, Name, Address, City, State, Zip, Bio) ->
+    JSON = {obj,
+            [{name, Name},
+             {address, Address},
+             {city, City},
+             {state, State},
+             {zip, Zip},
+             {bio, Bio}]}, 
+    couchdb_utils:doc_create (?COUCHDB_PROFILE_DB_NAME, Username, JSON).
