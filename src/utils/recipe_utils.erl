@@ -16,7 +16,7 @@
 -module (recipe_utils).
 -include ("wf.inc").
 -include ("config.inc").
--export ([get_user_recipes/2, save_recipe/4, delete_recipe/0, get_recipe/1, create_user_recipe_view/1]).
+-export ([get_user_recipes/2, save_recipe/4, delete_recipe/0, get_recipe/1, create_user_recipe_view/1, create_recipe_comments_view/1, save_comment/4]).
 
 -include_lib ("stdlib/include/qlc.hrl").
 
@@ -59,3 +59,17 @@ create_json ({Type, List}) ->
 create_user_recipe_view (Username) ->
     couchdb_utils:view_create (?COUCHDB_RECIPES_DB_NAME, Username, <<"javascript">>, [{all, list_to_binary("function(doc)\n{\n if (doc.username == \"" ++ Username ++ "\")\n {\n  emit(null, {\"id\": doc._id, \"name\":doc.name}); \n }\n}")}], []).
 
+create_recipe_comments_view (RecipeID) ->
+    couchdb_utils:view_create (?COUCHDB_COMMENTS_DB_NAME, RecipeID, <<"javascript">>, [{all, list_to_binary("function(doc)\n{\n if (doc.username == \"" ++ RecipeID ++ "\")\n {\n  emit(null, doc); \n }\n}")}], []).
+
+save_comment (ID, Username, Title, Comment) ->
+    JSON = {obj,
+            [{username, Username},
+             {title, Title},
+             {comment, Comment}]}, 
+    if 
+        ID =:= [] ->
+            couchdb_utils:doc_create (?COUCHDB_COMMENTS_DB_NAME, JSON);
+        true ->
+            couchdb_utils:doc_create (?COUCHDB_COMMENTS_DB_NAME, ID, JSON)
+    end.
