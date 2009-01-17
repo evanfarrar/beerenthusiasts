@@ -16,7 +16,7 @@
 -module (recipe_utils).
 -include ("wf.inc").
 -include ("config.inc").
--export ([get_user_recipes/2, save_recipe/4, delete_recipe/0, get_recipe/1, create_user_recipe_view/1, create_recipe_comments_view/1, save_comment/5]).
+-export ([get_user_recipes/2, save_recipe/4, delete_recipe/0, get_recipe/1, create_user_recipe_view/1, create_recipe_comments_view/1, save_comment/5, save_profile/7]).
 
 -include_lib ("stdlib/include/qlc.hrl").
 
