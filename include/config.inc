@@ -17,6 +17,7 @@
 -define(config_inc, ok).
 
 -define (COUCHDB_RECIPES_DB_NAME, "recipes").
+-define (COUCHDB_COMMENTS_DB_NAME, "comments").
 -define (COUCHDB_SERVER, "localhost").
 -define (COUCHDB_PORT, "5984").
 
