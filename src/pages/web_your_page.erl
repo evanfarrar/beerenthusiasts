@@ -31,9 +31,9 @@ main() ->
 title() -> "Beer Enthusiasts".
 
 body () ->    
+    Username = wf:user (),
     
-    
-    {ok, Results, _} = rfc4627:decode(couchdb_utils:doc_get_all (wf:user())),
+    {ok, Results, _} = rfc4627:decode(couchdb_utils:doc_get_all (Username)),
     %io:format ("~w~n", [Results]),
     case Results of
         {obj,[{"total_rows",_TotalRows},
@@ -53,6 +53,7 @@ body () ->
      #br{},
      "Your Recipes:",
      #br{},
+     #gravatar{email=db_backend:get_email_address(Username)},
      #flash { id=flash },
      #panel { id=test }
    ].

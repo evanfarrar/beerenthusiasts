@@ -18,6 +18,7 @@
 
 -define (COUCHDB_RECIPES_DB_NAME, "recipes").
 -define (COUCHDB_COMMENTS_DB_NAME, "comments").
+-define (COUCHDB_PROFILES_DB_NAME, "user_profiles").
 -define (COUCHDB_SERVER, "localhost").
 -define (COUCHDB_PORT, "5984").
 

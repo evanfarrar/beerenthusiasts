@@ -16,7 +16,7 @@
 -module (db_backend).
 -include ("wf.inc").
 -include ("config.inc").
--export ([init/0, start/0, stop/0, validate/2, add_user/3, is_username_used/1]).
+-export ([init/0, start/0, stop/0, validate/2, add_user/3, is_username_used/1, get_email_address/1]).
 
 -include_lib ("stdlib/include/qlc.hrl").
 
@@ -60,6 +60,9 @@ check (Username, EmailAddress, Input) ->
         true ->
             false
     end.
+
+get_email_address (Username) ->
+    do (qlc:q ([X#users.email_address || X <- mnesia:table(users), X#users.username =:= Username])).
 
 %%% Return valid if the Username and Password match, not_valid otherwise
 validate (Username, Password) ->
