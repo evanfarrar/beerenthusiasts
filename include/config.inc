@@ -22,6 +22,8 @@
 -define (COUCHDB_SERVER, "localhost").
 -define (COUCHDB_PORT, "5984").
 
--record (users, {username, email_address, password}).
+-record (users, {user_id, username, email_address, password, date_joined, bio=""}).
+-record (friends, {user_id, friend_id}).
+-record (queue, {user_id, beer_id}).
 
 -endif.

@@ -1,4 +1,4 @@
-%%% This file is part of beerenthusiasts.
+2%%% This file is part of beerenthusiasts.
 %%% 
 %%% beerenthusiasts is free software: you can redistribute it and/or modify
 %%% it under the terms of the GNU Affero General Public License as published by
@@ -110,3 +110,21 @@ write (Row) ->
         end,
     mnesia:transaction (F).
     
+add_friend (Username, Friend) ->
+    ok.
+
+delete_friend (Username, Friend) ->
+    ok.
+
+add_to_queue (Username, BeerID) ->
+    ok.
+
+delete_from_queue (Username, BeerID) ->
+    ok.
+
+get_users_queue (Username) ->
+    ok.
+
+get_users_friends (Username) ->
+    ok.
+
